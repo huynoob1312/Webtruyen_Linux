@@ -9,6 +9,11 @@ $action = $_GET['action'] ?? '';
 $novelModel = new NovelModel();
 
 switch ($action) {
+    case 'get_home_novels':
+        $data = $novelModel->getHomeNovels();
+        echo json_encode(['status' => 'success', 'data' => $data]);
+        break;
+
     case 'get_detail':
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         $res = $novelModel->getDetail($id);

@@ -2,6 +2,27 @@
 require_once __DIR__ . '/Model.php';
 
 class NovelModel extends Model {
+    public function getHomeNovels() {
+        $sql = "SELECT n.*, 
+                (SELECT title FROM novel_chapters WHERE novel_id = n.id ORDER BY id DESC LIMIT 1) as latest_chap_title,
+                (SELECT created_at FROM novel_chapters WHERE novel_id = n.id ORDER BY id DESC LIMIT 1) as latest_chap_date
+                FROM novels n 
+                ORDER BY n.updated_at DESC LIMIT 12";
+        $result = $this->conn->query($sql);
+        if (!$result) {
+            $sql = "SELECT * FROM novels ORDER BY updated_at DESC LIMIT 12";
+            $result = $this->conn->query($sql);
+        }
+        
+        $data = [];
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+        }
+        return $data;
+    }
+
     public function getDetail($id) {
         $id = intval($id);
         $stmt = $this->conn->prepare("SELECT * FROM novels WHERE id = ?");
@@ -71,6 +92,18 @@ class NovelModel extends Model {
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("issssss", $uid, $type, $novel_id, $novel_title, $novel_cover, $chap_title, $current_url);
         $stmt->execute();
+    }
+
+    public function getTopViews($limit = 5) {
+        $result = $this->conn->query("SELECT * FROM novels ORDER BY views DESC LIMIT $limit");
+        $data = [];
+        if ($result && $result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $row['cover_image'] = $row['cover_image'] ? $row['cover_image'] : 'assets/images/no-image.jpg';
+                $data[] = $row;
+            }
+        }
+        return $data;
     }
 }
 ?>
