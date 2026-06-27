@@ -14,6 +14,39 @@ switch ($action) {
         echo json_encode(['status' => 'success', 'data' => $data]);
         break;
 
+    case 'get_list':
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 24;
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        if ($page < 1) $page = 1;
+
+        $res = $novelModel->getList($page, $limit);
+        echo json_encode([
+            'status' => 'success', 
+            'data' => $res['data'], 
+            'pagination' => $res['pagination']
+        ]);
+        break;
+
+    case 'get_by_category':
+        $slug = $_GET['slug'] ?? '';
+        $limit = isset($_GET['limit']) ? intval($_GET['limit']) : 24;
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        if ($page < 1) $page = 1;
+
+        $res = $novelModel->getByCategory($slug, $page, $limit);
+        
+        if ($res) {
+            echo json_encode([
+                'status' => 'success', 
+                'category_name' => $res['category_name'],
+                'data' => $res['data'], 
+                'pagination' => $res['pagination']
+            ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Category not found']);
+        }
+        break;
+
     case 'get_detail':
         $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
         $res = $novelModel->getDetail($id);

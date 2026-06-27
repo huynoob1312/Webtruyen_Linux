@@ -5,6 +5,10 @@ require_once 'app/models/NovelModel.php';
 
 class NovelController extends Controller {
 
+    public function list() {
+        $this->render('novel/list', []);
+    }
+
     public function detail() {
         if (!isset($_GET['id']) || empty($_GET['id'])) {
             die('<div class="container mt-5 alert alert-danger">Lỗi: Thiếu ID truyện! <a href="index.php">Về trang chủ</a></div>');
