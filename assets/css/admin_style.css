@@ -1,0 +1,126 @@
+/* =========================================
+   1. GLOBAL & LAYOUT
+   ========================================= */
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* =========================================
+   2. SIDEBAR NAVIGATION
+   ========================================= */
+.sidebar {
+    width: 260px;          /* Cố định chiều rộng sidebar tại đây */
+    min-height: 100vh;     /* Chiều cao full màn hình */
+    background: #343a40;
+    color: white;
+    flex-shrink: 0;        /* Ngăn sidebar bị co lại */
+}
+
+.sidebar a {
+    color: #adb5bd;
+    text-decoration: none;
+    padding: 12px 20px;
+    display: block;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent; /* Tạo viền ẩn để khi hover hiện ra mượt hơn */
+}
+
+.sidebar a:hover, 
+.sidebar a.active {
+    background: #495057;
+    color: white;
+    border-left-color: #0d6efd; /* Màu xanh active */
+}
+
+/* Icon trong sidebar */
+.sidebar i {
+    width: 25px; /* Cố định chiều rộng icon để text thẳng hàng */
+    text-align: center;
+}
+
+/* =========================================
+   3. IMAGES & AVATARS
+   ========================================= */
+/* Ảnh bìa truyện (dùng trong novels.php) */
+.img-cover {
+    width: 50px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    background-color: #eee; /* Placeholder màu xám nếu ảnh lỗi */
+}
+
+/* Ảnh đại diện User (dùng trong manage_users, manage_comments) */
+.avatar-img {
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+    border-radius: 50%; /* Bo tròn hoàn toàn */
+}
+
+/* Kích thước avatar nhỏ (trong bảng) */
+.avatar-sm {
+    width: 35px;
+    height: 35px;
+}
+
+/* Kích thước avatar trung bình (trong bảng user) */
+.avatar-md {
+    width: 40px;
+    height: 40px;
+}
+
+/* =========================================
+   4. DASHBOARD STATS (index.php)
+   ========================================= */
+.card-stat {
+    border: none;
+    border-radius: 10px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.card-stat:hover {
+    transform: translateY(-5px); /* Hiệu ứng nổi lên khi hover */
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.3;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Background Gradients cho Dashboard */
+.bg-gradient-1 { background: linear-gradient(45deg, #4e73df, #224abe); } /* Xanh dương */
+.bg-gradient-2 { background: linear-gradient(45deg, #1cc88a, #13855c); } /* Xanh lá */
+.bg-gradient-3 { background: linear-gradient(45deg, #36b9cc, #258391); } /* Xanh ngọc */
+.bg-gradient-4 { background: linear-gradient(45deg, #f6c23e, #dda20a); } /* Vàng */
+
+/* =========================================
+   5. UTILITIES / HELPER CLASSES
+   ========================================= */
+/* Giới hạn chiều rộng text (dùng cho nội dung comment) */
+.text-limit {
+    max-width: 400px;
+    word-wrap: break-word;
+}
+
+/* Text siêu nhỏ (dùng cho label 'Quản trị viên') */
+.text-xs {
+    font-size: 10px;
+}
+
+/* Custom Table Header */
+.table-dark th {
+    background-color: #343a40;
+    border-color: #454d55;
+    font-weight: 600;
+}
