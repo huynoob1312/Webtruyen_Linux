@@ -102,5 +102,12 @@ class AdminController extends Controller {
         ]);
     }
 
+    public function categories() {
+        $this->render('admin/categories', [
+            'page_title' => 'Quản lý Thể loại',
+            'active_menu' => 'categories'
+        ]);
+    }
+    
 }
 ?>
