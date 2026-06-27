@@ -62,8 +62,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
     loadHomeNovels();
+    loadUserHistory();
 });
-
 
 async function loadHomeNovels() {
     let res = await API.get('api/novels.php?action=get_home_novels');
@@ -106,4 +106,29 @@ async function loadHomeNovels() {
     }
 }
 
+async function loadUserHistory() {
+    <?php if(!isset($_SESSION['user_id'])) echo "return;"; ?>
+    
+    let res = await API.get('api/user.php?action=history_get&limit=5');
+    if (res && res.status === 'success' && res.data.length > 0) {
+        document.getElementById('home-history-container').style.display = 'block';
+        let list = document.getElementById('home-history-list');
+        
+        list.innerHTML = res.data.map(h => {
+            return `
+            <li class="list-group-item d-flex align-items-center p-2 sidebar-card">
+                <a href="${h.chapter_url}">
+                    <img src="${h.item_image}" class="me-2 shadow-sm" style="width: 40px; height: 60px; object-fit: cover;">
+                </a>
+                <div class="flex-grow-1 overflow-hidden">
+                    <h6 class="mb-1 text-truncate" style="font-size: 0.9rem;">
+                        <a href="${h.chapter_url}" class="text-dark text-decoration-none fw-bold">${h.item_name}</a>
+                    </h6>
+                    <small class="text-muted d-block text-truncate">${h.chapter_name}</small>
+                    <a href="${h.chapter_url}" class="text-primary small">Đọc ngay</a>
+                </div>
+            </li>`;
+        }).join('');
+    }
+}
 </script>
