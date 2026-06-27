@@ -1,0 +1,20 @@
+<?php
+// File: config/database.php
+
+if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
+if (!defined('DB_USER')) define('DB_USER', 'root');     // User mặc định của XAMPP
+if (!defined('DB_PASS')) define('DB_PASS', '');         // Pass mặc định của XAMPP là rỗng
+if (!defined('DB_NAME')) define('DB_NAME', 'webdoctruyen');
+
+// Bật chế độ báo lỗi chi tiết (Rất quan trọng để debug)
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    if (!isset($GLOBALS['conn'])) {
+        $GLOBALS['conn'] = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        $GLOBALS['conn']->set_charset("utf8mb4");
+    }
+    $conn = $GLOBALS['conn'];
+} catch (Exception $e) {
+    die("<h3>Lỗi kết nối Database!</h3>Chi tiết: " . $e->getMessage());
+}
