@@ -1,4 +1,5 @@
 <?php
+// File: app/models/AdminModel.php
 require_once __DIR__ . '/Model.php';
 
 class AdminModel extends Model {
@@ -29,6 +30,27 @@ class AdminModel extends Model {
         return $data;
     }
 
+    // --- CATEGORIES ---
+    public function getCategories() {
+        $res = $this->conn->query("SELECT * FROM categories ORDER BY id DESC");
+        $cats = [];
+        while($r = $res->fetch_assoc()) { $cats[] = $r; }
+        return $cats;
+    }
+
+    public function addCategory($name, $slug) {
+        $check = $this->conn->query("SELECT id FROM categories WHERE slug='$slug'");
+        if ($check->num_rows > 0) return ['status' => 'error', 'message' => 'Thể loại hoặc Slug đã tồn tại'];
+        
+        $stmt = $this->conn->prepare("INSERT INTO categories (name, slug) VALUES (?, ?)");
+        $stmt->bind_param("ss", $name, $slug);
+        if ($stmt->execute()) return ['status' => 'success', 'message' => 'Đã thêm thành công'];
+        return ['status' => 'error', 'message' => 'Lỗi DB'];
+    }
+
+    public function deleteCategory($id) {
+        return $this->conn->query("DELETE FROM categories WHERE id=$id");
+    }
 
     // --- NOVELS ---
     public function getAdminNovels() {

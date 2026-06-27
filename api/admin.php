@@ -53,11 +53,33 @@ require_once '../app/models/AdminModel.php';
 $adminModel = new AdminModel();
 
 switch ($action) {
+
     // MODULE: DASHBOARD
     case 'dashboard_stats':
         $data = $adminModel->getDashboardStats($user_id, $role);
         $data['username'] = $_SESSION['username'];
         responseJson('success', $data);
+        break;
+
+    // MODULE: CATEGORIES
+    case 'get_categories':
+        $cats = $adminModel->getCategories();
+        responseJson('success', $cats);
+        break;
+
+    case 'add_category':
+        $name = trim($_POST['name'] ?? '');
+        if (!$name) responseJson('error', [], 'Tên không hợp lệ');
+        $slug = createSlugFromText($name);
+        
+        $res = $adminModel->addCategory($name, $slug);
+        responseJson($res['status'], [], $res['message']);
+        break;
+
+    case 'delete_category':
+        $id = intval($_POST['id'] ?? 0);
+        $adminModel->deleteCategory($id);
+        responseJson('success', [], 'Đã xoá');
         break;
 
     // MODULE: NOVELS
@@ -170,7 +192,6 @@ switch ($action) {
             responseJson('error', [], 'Lỗi hệ thống');
         }
         break;
-
 
     default:
         responseJson('error', [], 'Invalid Admin Action');
