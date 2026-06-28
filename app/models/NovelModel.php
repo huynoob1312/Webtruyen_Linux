@@ -52,7 +52,6 @@ class NovelModel extends Model {
     public function getByCategory($slug, $page, $limit) {
         $offset = ($page - 1) * $limit;
         
-        // 1. Lấy ID và tên của category theo slug
         $cat_stmt = $this->conn->prepare("SELECT id, name FROM categories WHERE slug = ?");
         $cat_stmt->bind_param("s", $slug);
         $cat_stmt->execute();
@@ -63,14 +62,12 @@ class NovelModel extends Model {
         $cat = $cat_res->fetch_assoc();
         $cat_id = $cat['id'];
 
-        // 2. Đếm tổng số truyện qua bảng trung gian novel_categories
         $count_stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM novels n JOIN novel_categories nc ON n.id = nc.novel_id WHERE nc.category_id = ?");
         $count_stmt->bind_param("i", $cat_id);
         $count_stmt->execute();
         $total_records = $count_stmt->get_result()->fetch_assoc()['total'];
         $total_pages = ceil($total_records / $limit);
 
-        // 3. Lấy danh sách truyện
         $stmt = $this->conn->prepare("SELECT n.* FROM novels n JOIN novel_categories nc ON n.id = nc.novel_id WHERE nc.category_id = ? ORDER BY n.updated_at DESC LIMIT ?, ?");
         $stmt->bind_param("iii", $cat_id, $offset, $limit);
         $stmt->execute();
@@ -100,7 +97,6 @@ class NovelModel extends Model {
         $novel = $stmt->get_result()->fetch_assoc();
 
         if ($novel) {
-            // Increase views
             $this->conn->query("UPDATE novels SET views = views + 1 WHERE id = $id");
             $novel['views']++;
             
@@ -133,7 +129,6 @@ class NovelModel extends Model {
 
     public function getChapter($chapter_id) {
         $chapter_id = intval($chapter_id);
-        // Tăng view chương trực tiếp (Không có cột views trong bảng novel_chapters)
         
         $stmt = $this->conn->prepare("SELECT c.*, n.title as novel_title 
                                      FROM novel_chapters c 
