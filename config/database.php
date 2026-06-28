@@ -1,10 +1,8 @@
 <?php
-// File: config/database.php
-
-if (!defined('DB_HOST')) define('DB_HOST', 'localhost');
-if (!defined('DB_USER')) define('DB_USER', 'root');     // User mặc định của XAMPP
-if (!defined('DB_PASS')) define('DB_PASS', '');         // Pass mặc định của XAMPP là rỗng
-if (!defined('DB_NAME')) define('DB_NAME', 'webdoctruyen');
+if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: 'root');
+if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') ?: '');
+if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: 'webtruyen');
 
 // Bật chế độ báo lỗi chi tiết (Rất quan trọng để debug)
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
