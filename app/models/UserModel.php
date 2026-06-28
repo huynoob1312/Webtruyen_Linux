@@ -65,6 +65,68 @@ class UserModel extends Model {
 
     // --- HISTORY ---
     
+    
+    // --- AUTHENTICATION ---
+    
+    public function login($username, $password) {
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                if ($user['status'] === 'banned') {
+                    return ['status' => 'error', 'message' => '🚫 Tài khoản đã bị KHÓA vĩnh viễn!'];
+                } else {
+                    return ['status' => 'success', 'data' => $user];
+                }
+            } else {
+                return ['status' => 'error', 'message' => '❌ Sai mật khẩu!'];
+            }
+        }
+        return ['status' => 'error', 'message' => '❌ Tài khoản không tồn tại!'];
+    }
+
+    public function register($username, $email, $password) {
+        $check = $this->conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $check->bind_param("ss", $username, $email);
+        $check->execute();
+        
+        if ($check->get_result()->num_rows > 0) {
+            return ['status' => 'error', 'message' => 'Tên đăng nhập hoặc Email đã tồn tại!'];
+        }
+        
+        $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
+        $role = 'user';
+        
+        $stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $username, $email, $hashed_pass, $role);
+        
+        if ($stmt->execute()) {
+            return ['status' => 'success', 'message' => 'Đăng ký thành công! Bạn có thể đăng nhập ngay.'];
+        } else {
+            return ['status' => 'error', 'message' => 'Lỗi hệ thống: ' . $this->conn->error];
+        }
+    }
+
+    public function checkSessionStatus($user_id) {
+        $stmt_status = $this->conn->prepare("SELECT status, role, avatar FROM users WHERE id = ?");
+        if ($stmt_status) {
+            $stmt_status->bind_param("i", $user_id);
+            $stmt_status->execute();
+            $res_status = $stmt_status->get_result();
+
+            if ($res_status->num_rows > 0) {
+                return $res_status->fetch_assoc();
+            }
+        }
+        return null; // Not found
+    }
+
+    // --- HISTORY ---
+    
     public function addHistory($user_id, $type, $item_id, $item_name, $item_image, $chapter_name, $chapter_url) {
         $sql = "INSERT INTO reading_history (user_id, type, item_id, item_name, item_image, chapter_name, chapter_url) 
                 VALUES (?, ?, ?, ?, ?, ?, ?) 
