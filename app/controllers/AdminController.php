@@ -108,6 +108,17 @@ class AdminController extends Controller {
             'active_menu' => 'categories'
         ]);
     }
+     public function notifications() {
+        // Chỉ admin mới được gửi thông báo
+        if ($_SESSION['role'] !== 'admin') {
+            header("Location: index.php?route=admin/dashboard");
+            exit;
+        }
+        $this->render('admin/notifications', [
+            'page_title' => 'Gửi thông báo',
+            'active_menu' => 'notifications'
+        ]);
+    }
     
 }
 ?>
