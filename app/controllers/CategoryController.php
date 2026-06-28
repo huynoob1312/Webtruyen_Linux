@@ -12,6 +12,7 @@ class CategoryController extends Controller {
         }
 
         $novelModel = new NovelModel();
+        // Reuse getByCategory from NovelModel - it handles slug lookup + novel list
         $result = $novelModel->getByCategory($slug, 1, 9999); // get all, no pagination needed on this view
 
         if (!$result) {
@@ -30,6 +31,7 @@ class CategoryController extends Controller {
             die('<div class="container mt-5 alert alert-danger">Lỗi: Cần cung cấp link thể loại truyện tranh! <a href="index.php">Về trang chủ</a></div>');
         }
 
+        // Gọi API ngoài qua ComicModel
         require_once 'app/models/ComicModel.php';
         $comicModel = new ComicModel();
         $data = $comicModel->getCategoryComics($slug);
