@@ -1,0 +1,45 @@
+/* File: css/detail.css */
+
+/* --- Ảnh bìa --- */
+.card-img-detail {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* --- Khung nội dung mô tả --- */
+.desc-box-scroll {
+    line-height: 1.6;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.desc-box-full {
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+/* --- Danh sách chương --- */
+.chapter-list-scroll {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* --- Hiệu ứng nút chương (Chung cho cả Comic và Novel) --- */
+.hover-chap {
+    transition: 0.2s;
+    background-color: #f8f9fa; /* Màu nền mặc định */
+}
+
+/* Riêng cho Novel nếu muốn nền trắng như code cũ */
+.novel-chap-item {
+    background-color: #fff;
+}
+
+.hover-chap:hover {
+    background-color: #fff3cd; /* Màu vàng nhạt khi hover */
+    color: #856404 !important;
+    border-color: #ffeeba !important;
+    transform: translateX(3px); /* Hiệu ứng đẩy nhẹ sang phải */
+}

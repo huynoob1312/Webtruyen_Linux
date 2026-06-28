@@ -1,0 +1,39 @@
+.env                    
+.env.local
+.env.production
+*.env
+
+webdoctruyen.sql
+
+uploads/*
+!uploads/.gitkeep     
+
+# ---- Logs ----
+*.log
+logs/
+error_log
+
+# ---- Temp files ----
+*.tmp
+*.cache
+*.bak
+*.swp
+*.swo
+*~
+
+# ---- OS files ----
+.DS_Store               
+Thumbs.db               
+desktop.ini
+
+# ---- IDE / Editor ----
+.vscode/
+.idea/
+*.suo
+*.user
+nbproject/
+
+vendor/
+composer.lock
+
+docker-compose.override.yml

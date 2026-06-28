@@ -1,0 +1,28 @@
+# .dockerignore
+# Chỉ định các file/thư mục KHÔNG copy vào Docker image
+# Tương tự như .gitignore nhưng dành cho Docker
+
+# Git
+.git
+.gitignore
+
+# Docker files (không cần copy vào chính nó)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs và temp files
+*.log
+*.tmp
+
+# README và tài liệu dev
+README.md
+
+# IDE configs
+.vscode
+.idea
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db

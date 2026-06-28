@@ -15,6 +15,12 @@ if (!isset($_GET['action'])) {
 $action = $_GET['action'];
 
 switch ($action) {
+    case 'get_categories':
+        $novelModel = new NovelModel();
+        $data = $novelModel->getCategories();
+        echo json_encode(['status' => 'success', 'data' => $data]);
+        break;
+
     case 'get_top_views':
         $type = isset($_GET['type']) ? $_GET['type'] : 'novel';
         if ($type === 'novel') {
