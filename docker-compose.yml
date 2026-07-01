@@ -12,10 +12,9 @@ services:
     volumes:
       - ./uploads:/var/www/html/uploads # Mount thư mục uploads để dữ liệu upload không mất khi restart
     environment:
-      # Truyền thông tin DB vào trong container qua biến môi trường
       DB_HOST: db # Tên service MySQL bên dưới (Docker tự resolve DNS)
       DB_USER: root
-      DB_PASS: "" # Mật khẩu rỗng giống XAMPP
+      DB_PASS: ""
       DB_NAME: webtruyen
     depends_on:
       db:
