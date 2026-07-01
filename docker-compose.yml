@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # ---- Service 1: Web Server PHP ----
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webdoctruyen_app
+    ports:
+      - "8080:80" # Truy cập qua http://localhost:8080
+    volumes:
+      - ./uploads:/var/www/html/uploads # Mount thư mục uploads để dữ liệu upload không mất khi restart
+    environment:
+      # Truyền thông tin DB vào trong container qua biến môi trường
+      DB_HOST: db # Tên service MySQL bên dưới (Docker tự resolve DNS)
+      DB_USER: root
+      DB_PASS: "" # Mật khẩu rỗng giống XAMPP
+      DB_NAME: webtruyen
+    depends_on:
+      db:
+        condition: service_healthy # Chờ DB khởi động xong mới start app
+    networks:
+      - webdoctruyen_net
+    restart: unless-stopped
+
+  # ---- Service 2: MySQL Database ----
+  db:
+    image: mysql:8.0
+    container_name: webdoctruyen_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes" # Cho phép root không có password
+      MYSQL_DATABASE: webtruyen # Tự tạo database này khi khởi động
+    volumes:
+      - db_data:/var/lib/mysql # Lưu dữ liệu DB ra ngoài container (không mất khi restart)
+      - ./webdoctruyen.sql:/docker-entrypoint-initdb.d/init.sql # Auto import SQL khi lần đầu khởi động
+    ports:
+      - "3307:3306" # Map ra port 3307 để dùng MySQL Workbench/Navicat từ máy host
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root" ] # Xóa cờ mật khẩu
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - webdoctruyen_net
+    restart: unless-stopped
+
+  # ---- Service 3: phpMyAdmin (Tùy chọn, để quản lý DB qua UI) ----
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: webdoctruyen_pma
+    ports:
+      - "8081:80" # Truy cập qua http://localhost:8081
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_NO_PASSWORD: 1 # Cho phép phpMyAdmin đăng nhập bằng user rỗng pass
+    depends_on:
+      - db
+    networks:
+      - webdoctruyen_net
+    restart: unless-stopped
+
+# ---- Volumes: Lưu trữ dữ liệu bền vững ----
+volumes:
+  db_data:
+    driver: local
+
+# ---- Networks: Mạng nội bộ giữa các container ----
+networks:
+  webdoctruyen_net:
+    driver: bridge

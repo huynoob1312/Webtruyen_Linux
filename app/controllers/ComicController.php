@@ -22,6 +22,7 @@ class ComicController extends Controller {
             die('<div class="container mt-5 alert alert-warning">Không tìm thấy truyện này!</div>');
         }
         
+        // Cập nhật view
         $img_domain = "https://img.otruyenapi.com/uploads/comics/";
         $comic_thumb_save = $img_domain . $comic['thumb_url'];
         $current_view = $model->increaseView($slug, $comic['name'], $comic_thumb_save);

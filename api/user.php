@@ -21,6 +21,9 @@ $action = $_POST['action'] ?? $_GET['action'] ?? '';
 $userModel = new UserModel();
 
 switch ($action) {
+    // ==========================================
+    // 1. LỊCH SỬ ĐỌC (HISTORY)
+    // ==========================================
     case 'history_add':
         $type = $_POST['type'] ?? '';
         $item_id = $_POST['item_id'] ?? '';
@@ -67,7 +70,9 @@ switch ($action) {
         }
         break;
 
-
+    // ==========================================
+    // 2. YÊU THÍCH (FAVORITE)
+    // ==========================================
     case 'toggle_favorite':
         $type = $_POST['type'] ?? 'novel';
         if ($type === 'novel') {
@@ -85,6 +90,9 @@ switch ($action) {
         }
         break;
 
+    // ==========================================
+    // 3. THÔNG BÁO (NOTIFICATION)
+    // ==========================================
     case 'notif_report':
         $title = trim($_POST['title'] ?? '');
         $msg = trim($_POST['message'] ?? '');

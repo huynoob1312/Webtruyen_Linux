@@ -15,9 +15,11 @@ class SearchController extends Controller {
             exit;
         }
 
+        // A. Tìm Truyện Chữ (qua NovelModel)
         $novelModel = new NovelModel();
         $db_results = $novelModel->searchNovels($keyword, 50); // trả array, không phải mysqli_result
 
+        // B. Tìm Truyện Tranh (qua ComicModel)
         $comicModel = new ComicModel();
         $img_domain = "https://img.otruyenapi.com/uploads/comics/";
         $api_results = $comicModel->searchComics($keyword, 20);

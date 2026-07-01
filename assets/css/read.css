@@ -1,0 +1,86 @@
+/* File: css/read.css */
+
+/* --- Layout chung --- */
+.read-wrapper {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+}
+
+.read-container {
+    max-width: 900px; /* Giới hạn chiều rộng để dễ đọc */
+    margin: 0 auto;
+    padding-top: 1.5rem;
+}
+
+/* --- Thanh điều hướng (Control Bar) --- */
+.chapter-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.chapter-select {
+    max-width: 300px;
+    font-weight: 500;
+    border: 1px solid #ced4da;
+    display: inline-block;
+    width: auto;
+}
+
+.btn-nav {
+    min-width: 100px;
+}
+
+/* Trạng thái disabled cho nút điều hướng */
+.btn-nav.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* --- Phần hiển thị Truyện Tranh --- */
+.comic-content {
+    background: #fff;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    border-radius: 0.25rem;
+    padding: 10px;
+    min-height: 500px;
+}
+
+.comic-image-item {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    /* margin-bottom: -1px;  Xóa khoảng trắng nhỏ nếu bị tách ảnh */
+}
+
+/* --- Phần hiển thị Truyện Chữ --- */
+.novel-content {
+    background: #fff; /* Có thể để trắng hoặc màu ngà */
+    padding: 2rem;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    border-radius: 0.25rem;
+    font-family: 'Merriweather', serif; /* Font chữ có chân dễ đọc */
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 576px) {
+    .chapter-select {
+        max-width: 150px; /* Thu nhỏ dropdown trên điện thoại */
+    }
+    .novel-content {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+}

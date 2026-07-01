@@ -61,9 +61,47 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
+    loadHomeComics();
     loadHomeNovels();
     loadUserHistory();
 });
+
+async function loadHomeComics() {
+    let res = await API.get('api/comics.php?action=home');
+    let container = document.getElementById('home-comics');
+    if (res && res.status === 'success' && res.data && res.data.data.items) {
+        let comics = res.data.data.items.slice(0, 12);
+        let imgDomain = "https://img.otruyenapi.com/uploads/comics/";
+        
+        let html = comics.map(comic => {
+            let thumb = imgDomain + comic.thumb_url;
+            let chapText = (comic.chaptersLatest && comic.chaptersLatest[0]) ? 'Chap ' + comic.chaptersLatest[0].chapter_name : '';
+            let timeStr = timeAgo(comic.updatedAt);
+
+            return `
+            <div class="col-4 col-md-3"> 
+                <div class="book-card">
+                    <a href="index.php?route=comic/detail&slug=${comic.slug}" class="book-thumb">
+                        <img src="${thumb}" loading="lazy" alt="${comic.name}" onerror="this.src='assets/images/no-image.jpg'">
+                        <span class="badge bg-warning text-dark badge-overlay">Hot</span>
+                    </a>
+                    <div class="book-body">
+                        <h3 class="book-title">
+                            <a href="index.php?route=comic/detail&slug=${comic.slug}" title="${comic.name}">${comic.name}</a>
+                        </h3>
+                        <div class="book-info d-flex justify-content-between align-items-center">
+                            <span class="text-success small fw-bold text-truncate" style="max-width: 65%;">${chapText}</span>
+                            <span class="text-muted small" style="font-size: 0.8rem;"><i class="far fa-clock"></i> ${timeStr}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        container.innerHTML = html;
+    } else {
+        container.innerHTML = `<div class="col-12 text-center text-muted py-4">Không thể tải truyện tranh.</div>`;
+    }
+}
 
 async function loadHomeNovels() {
     let res = await API.get('api/novels.php?action=get_home_novels');

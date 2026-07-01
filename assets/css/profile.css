@@ -1,0 +1,40 @@
+/* Avatar trang cá nhân */
+.profile-avatar {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+}
+
+/* Nút upload ảnh (icon máy ảnh) */
+.profile-upload-btn {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.profile-upload-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* Ảnh bìa truyện trong danh sách (Tủ truyện, Lịch sử) */
+.profile-cover-img {
+    height: 140px;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Nút xóa truyện (dấu X) */
+.btn-remove-item {
+    z-index: 10;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Chữ hiển thị thời gian nhỏ */
+.text-timestamp {
+    font-size: 10px;
+}

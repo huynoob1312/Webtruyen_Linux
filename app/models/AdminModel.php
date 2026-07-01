@@ -168,5 +168,90 @@ class AdminModel extends Model {
         return $stmt->execute();
     }
 
+    // --- USERS, COMMENTS, NOTIFS ---
+    public function getUsers() {
+        $res = $this->conn->query("SELECT id, username, email, avatar, password, role, status, created_at FROM users ORDER BY id DESC");
+        $users = [];
+        while($r = $res->fetch_assoc()) { 
+            if(empty($r['avatar'])) $r['avatar'] = 'https://ui-avatars.com/api/?name='.$r['username'].'&background=random';
+            $users[] = $r; 
+        }
+        return $users;
+    }
+
+    public function resetUserPassword($id, $new_pwd) {
+        $hashed = password_hash($new_pwd, PASSWORD_DEFAULT);
+        return $this->conn->query("UPDATE users SET password = '$hashed' WHERE id = $id");
+    }
+
+    public function addUser($username, $email, $role, $pwd) {
+        $check = $this->conn->prepare("SELECT id FROM users WHERE username=? OR email=?");
+        $check->bind_param("ss", $username, $email);
+        $check->execute();
+        if ($check->get_result()->num_rows > 0) {
+            return ['status' => 'error', 'message' => 'Username hoặc Email đã được sử dụng'];
+        }
+
+        $hashed = password_hash($pwd, PASSWORD_DEFAULT);
+        $stmt = $this->conn->prepare("INSERT INTO users (username, email, role, password) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $username, $email, $role, $hashed);
+        
+        if ($stmt->execute()) return ['status' => 'success', 'message' => 'Thêm người dùng mới thành công'];
+        return ['status' => 'error', 'message' => 'Lỗi hệ thống khi thêm user'];
+    }
+
+    public function editUser($id, $username, $email, $role, $pwd) {
+        if (!empty($pwd)) {
+            $hashed = password_hash($pwd, PASSWORD_DEFAULT);
+            $stmt = $this->conn->prepare("UPDATE users SET username=?, email=?, role=?, password=? WHERE id=?");
+            $stmt->bind_param("ssssi", $username, $email, $role, $hashed, $id);
+        } else {
+            $stmt = $this->conn->prepare("UPDATE users SET username=?, email=?, role=? WHERE id=?");
+            $stmt->bind_param("sssi", $username, $email, $role, $id);
+        }
+        return $stmt->execute();
+    }
+
+    public function deleteUserAccount($id) {
+        return $this->conn->query("DELETE FROM users WHERE id = $id");
+    }
+
+    public function updateUserRole($id, $role) {
+        return $this->conn->query("UPDATE users SET role = '$role' WHERE id = $id");
+    }
+
+    public function toggleUserStatus($id, $status) {
+        return $this->conn->query("UPDATE users SET status = '$status' WHERE id = $id AND role != 'admin'");
+    }
+
+    public function getGlobalComments() {
+        $res = $this->conn->query("SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id = u.id ORDER BY c.id DESC LIMIT 50");
+        $cmts = [];
+        if ($res && $res->num_rows > 0) {
+            while($r = $res->fetch_assoc()) { $cmts[] = $r; }
+        }
+        return $cmts;
+    }
+
+    public function deleteGlobalComment($id) {
+        return $this->conn->query("DELETE FROM comments WHERE id = $id");
+    }
+
+    public function sendSystemNotification($admin_id, $uid, $title, $msg) {
+        if ($uid > 0) {
+            $stmt = $this->conn->prepare("INSERT INTO notifications (sender_id, receiver_id, type, title, message) VALUES (?, ?, 'system', ?, ?)");
+            $stmt->bind_param("iiss", $admin_id, $uid, $title, $msg);
+            $stmt->execute();
+        } else {
+            $users = $this->conn->query("SELECT id FROM users");
+            $stmt = $this->conn->prepare("INSERT INTO notifications (sender_id, receiver_id, type, title, message) VALUES (?, ?, 'system', ?, ?)");
+            while($u = $users->fetch_assoc()) {
+                $rid = $u['id'];
+                $stmt->bind_param("iiss", $admin_id, $rid, $title, $msg);
+                $stmt->execute();
+            }
+        }
+        return true;
+    }
 }
 ?>
