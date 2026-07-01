@@ -18,7 +18,7 @@ jobs:
     - name: Build Docker Image
       run: docker build -t webtruyen-linux:latest .
 
-# CD
+# CD COMMENT DUE TO NETWORK LIMIT
     # - name: Deploy to Server via SSH
     #   uses: appleboy/ssh-action@v1.0.3
     #   with:
